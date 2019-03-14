@@ -1,0 +1,17 @@
+CREATE EXTERNAL TABLE ChicagoEmployee(name STRING,jobTitle STRING,dpt STRING,typeJob STRING,typeIncome STRING,hours INT,annualSalary DOUBLE,hourlyRate DECIMAL(8,2))  
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
+WITH SERDEPROPERTIES('separatorChar' = ',','quoteChar' = '\"','escapeChar' = '\\')  
+STORED AS TEXTFILE LOCATION '/home/cloudera/cs523/input/ChicagoEmployee.csv' 
+TBLPROPERTIES ('skip.header.line.count' = '1');
+
+LOAD DATA LOCAL INPATH '/home/cloudera/cs523/input/ChicagoEmployee.csv'  OVERWRITE INTO TABLE ChicagoEmployee;
+
+INSERT OVERWRITE LOCAL DIRECTORY '/home/cloudera/cs523/output_2' 
+row format delimited 
+FIELDS TERMINATED BY '\t'
+SELECT jobTitle,dpt, AVG(hourlyRate) AS AVGHourlyRate
+FROM ChicagoEmployee 
+WHERE typeJob='P'
+  AND hourlyRate != 0
+GROUP BY jobTitle,dpt
+LIMIT 20;
