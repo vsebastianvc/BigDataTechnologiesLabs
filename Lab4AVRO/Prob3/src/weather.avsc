@@ -1,0 +1,10 @@
+{
+	"type": "record",
+	"name": "WeatherRecord",
+	"doc": "A weather reading.",
+	"fields": [
+			{"name": "year", "type": "int", "order": "descending"},
+			{"name": "temperature", "type": "float"},
+			{"name": "stationId", "type": "string"}	 
+		]
+}
